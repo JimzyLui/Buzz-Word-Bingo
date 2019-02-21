@@ -10,7 +10,9 @@ const oPASS = { success: true };
 const oFAIL = { success: false };
 
 app.get("/", (req, res) => {
-  res.render("/public/index.html");
+  res.send("Hello there!");
+
+  // res.render("/public/index.html");
 });
 app
   .route("/buzzwords")
@@ -66,9 +68,11 @@ app.post("/heard", function(req, res) {
     const objToUpdate = arr.filter(x => x.buzzWord === req.body.buzzWord).pop();
     arr = arr.filter(x => x.buzzWord !== req.body.buzzWord);
 
-    objToUpdate.points += req.body.points;
+    // objToUpdate.points += req.body.points;
+    objToUpdate.points++;
     arr.push(objToUpdate);
-    res.json(oPASS);
+    const oRtn = { totalScore: objToUpdate.points };
+    res.json(oRtn);
   } else {
     res.json(oFAIL);
   }
