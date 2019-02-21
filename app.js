@@ -6,11 +6,14 @@ const PORT = 8080;
 app.use(bp.urlencoded({ extended: false }));
 app.use(bp.json());
 let arr = [];
+let totalScore = 0;
 const oPASS = { success: true };
 const oFAIL = { success: false };
 
 app.get("/", (req, res) => {
-  res.send("Hello there!");
+  res.send(
+    "<h1>Buzz Word Bingo</h1> <p>A vintage game where a total number of points are won when the contestant says certain words which have different preassigned values.</p>"
+  );
 
   // res.render("/public/index.html");
 });
@@ -58,10 +61,12 @@ app
 
 app.post("/reset", function(req, res) {
   arr = [];
+  totalScore = 0;
   res.json(oPASS);
   console.log("status: ", arr);
 });
 
+/*
 app.post("/heard", function(req, res) {
   if (arr.map(x => x.buzzWord).indexOf(req.body.buzzWord) > -1) {
     // update the word count
@@ -72,6 +77,20 @@ app.post("/heard", function(req, res) {
     objToUpdate.points++;
     arr.push(objToUpdate);
     const oRtn = { totalScore: objToUpdate.points };
+    res.json(oRtn);
+  } else {
+    res.json(oFAIL);
+  }
+  console.log("status: ", arr);
+});
+*/
+app.post("/heard", function(req, res) {
+  if (arr.map(x => x.buzzWord).indexOf(req.body.buzzWord) > -1) {
+    // Found the word
+    const objWord = arr.filter(x => x.buzzWord === req.body.buzzWord).pop();
+    totalScore += objWord.points;
+
+    const oRtn = { totalScore: totalScore };
     res.json(oRtn);
   } else {
     res.json(oFAIL);
